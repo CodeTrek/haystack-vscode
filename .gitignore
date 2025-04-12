@@ -1,0 +1,16 @@
+
+# Ignore all log files
+*.log
+*.exe
+*.local.yaml
+*.vsix
+
+# Ignore build directory
+build/
+out/
+dist/
+# Ignore everything in node_modules
+node_modules/
+
+.cache/
+.haystack/

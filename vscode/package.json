@@ -1,0 +1,121 @@
+{
+  "name": "haystack-search",
+  "displayName": "Haystack Search",
+  "description": "A VS Code extension that integrates Haystack for advanced file search capabilities.",
+  "version": "0.0.4",
+  "publisher": "codetrek",
+  "haystackVersion": "1.0.2",
+  "repository": "https://github.com/CodeTrek/haystack",
+  "license": "MIT",
+  "icon": "resources/icon.png",
+  "author": {
+    "name": "Jianjun Chen",
+    "email": "sychenjianjun@gmail.com"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "extensionKind": [
+    "workspace",
+    "ui"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "vscode:prepublish": "rimraf dist && cross-env NODE_ENV=production webpack --mode production",
+    "compile": "webpack",
+    "compile:prod": "cross-env NODE_ENV=production webpack",
+    "compile:dev": "cross-env NODE_ENV=development webpack",
+    "watch": "cross-env NODE_ENV=development webpack --watch",
+    "watch:prod": "cross-env NODE_ENV=production webpack --watch",
+    "build:prod": "npm run clean && cross-env NODE_ENV=production webpack --mode production",
+    "build:dev": "npm run clean && cross-env NODE_ENV=development webpack --mode development",
+    "test": "node ./dist/test/runTest.js",
+    "build": "npm run build:prod && vsce package",
+    "clean": "rimraf dist",
+    "analyze": "cross-env NODE_ENV=production webpack --analyze",
+    "lint": "eslint src --ext ts",
+    "pretest": "npm run compile:dev && npm run lint"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "haystack-search",
+          "title": "Haystack",
+          "icon": "resources/search.svg"
+        }
+      ]
+    },
+    "views": {
+      "haystack-search": [
+        {
+          "id": "haystackSearch",
+          "name": "Search",
+          "type": "webview",
+          "retainContextWhenHidden": true
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "haystack.searchSelectedText",
+        "title": "Search with Haystack"
+      },
+      {
+        "command": "haystack.syncWorkspace",
+        "title": "Refresh Haystack Index",
+        "icon": "$(sync)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "haystack.searchSelectedText",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "haystack.syncWorkspace",
+          "when": "view == haystackSearch",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "adm-zip": "^0.5.16",
+    "axios": "^1.6.7"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.14.0",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "@vscode/vsce": "^3.3.2",
+    "copy-webpack-plugin": "^13.0.0",
+    "cross-env": "^7.0.3",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "eslint": "^9.24.0",
+    "rimraf": "^6.0.1",
+    "terser-webpack-plugin": "^5.3.14",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "vscode-test": "^1.6.1",
+    "webpack": "^5.99.5",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^6.0.1"
+  }
+}

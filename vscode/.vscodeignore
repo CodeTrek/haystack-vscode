@@ -1,0 +1,47 @@
+# Source code
+src/**
+# Do not exclude resources/search.js as we use it directly, not the built version in dist directory
+# /resources/search.js
+
+# Development tool configurations
+.vscode/**
+.git/**
+.github/**
+.gitignore
+tsconfig.json
+webpack.config.js
+.eslintrc.json
+
+# Test files
+test/**
+**/*.test.ts
+**/*.spec.ts
+
+# Package manager files
+node_modules/**
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Temporary files
+.DS_Store
+.tmp/**
+out/**
+coverage/**
+
+# Compiler generated files
+**/*.map
+**/*.js.map
+
+# Development documentation
+docs/**
+CHANGELOG.md
+CONTRIBUTING.md
+.prettierrc
+.editorconfig
+./convert-svg-to-png.js
+
+# Only keep compiled dist directory and necessary resource files
+# dist/** - already included in package.json files field
+# resources/search.css - already included in package.json files field
+# resources/search.svg - already included in package.json files field

@@ -1,0 +1,75 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "VS Code Extension Build",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/vscode"
+            },
+            "command": "npm",
+            "args": [
+                "run",
+                "compile"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$tsc"
+            ]
+        },
+        {
+            "label": "VS Code Extension Watch",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/vscode"
+            },
+            "command": "npm",
+            "args": [
+                "run",
+                "watch"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "typescript",
+                "pattern": {
+                    "regexp": "^\\[webpack\\]\\s+(\\d{1,2}:\\d{2}:\\d{2}\\s+[AP]M)\\s+(\\w+):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^\\[webpack\\]\\s+Compiling...",
+                    "endsPattern": "^\\[webpack\\]\\s+Compiled successfully"
+                }
+            },
+            "presentation": {
+                "reveal": "never",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "VS Code Extension Test",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/vscode"
+            },
+            "command": "npm",
+            "args": [
+                "run",
+                "test"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$tsc"
+            ]
+        }
+    ]
+}
