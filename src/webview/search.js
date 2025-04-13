@@ -3,6 +3,16 @@
     const vscode = acquireVsCodeApi();
     let isSearching = false; // Add a flag to track search status
 
+    // Add HTML escaping function
+    function escapeHTML(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     // Search function
     function performSearch() {
         // Ignore if a search is already in progress
@@ -74,7 +84,7 @@
             const fileHeader = document.createElement('div');
             fileHeader.className = 'file-header';
             fileHeader.innerHTML = `
-                <span class="file-path">${result.file}${result.truncate ? ' (truncated)' : ''}</span>
+                <span class="file-path">${escapeHTML(result.file)}${result.truncate ? ' (truncated)' : ''}</span>
                 <span class="match-count">${result.lines?.length || 0}</span>
             `;
             fileGroup.appendChild(fileHeader);
@@ -104,21 +114,21 @@
                             ? '...' + beforeMatch.substring(beforeMatch.length - 24)
                             : beforeMatch;
 
-                        highlightedContent += truncatedBefore;
-                        highlightedContent += `<span class="match-highlight">${content.substring(start, end)}</span>`;
+                        highlightedContent += escapeHTML(truncatedBefore);
+                        highlightedContent += `<span class="match-highlight">${escapeHTML(content.substring(start, end))}</span>`;
 
                         const afterMatch = content.substring(end);
                         const truncatedAfter = afterMatch.length > 128
                             ? afterMatch.substring(0, 128) + '...'
                             : afterMatch;
-                        highlightedContent += truncatedAfter;
+                        highlightedContent += escapeHTML(truncatedAfter);
 
                         matchDiv.dataset.start = start;
                         matchDiv.dataset.end = end;
                     } else {
-                        highlightedContent = content.length > 160
+                        highlightedContent = escapeHTML(content.length > 160
                             ? content.substring(0, 160) + '...'
-                            : content;
+                            : content);
                     }
 
                     lineContentSpan.innerHTML = highlightedContent;
