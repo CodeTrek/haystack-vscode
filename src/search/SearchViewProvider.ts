@@ -139,7 +139,7 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
     this._searchHandlers.handleFocusSearchInput(this._view.webview);
   }
 
-  private async updateStatusbar() {
+  public async updateStatusbar() {
     try {
       if (!this._haystackProvider || !this._haystackProvider.getHaystack()) {
         this._statusBarItem.text = `$(error) Haystack: (Not installed)`;

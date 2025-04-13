@@ -104,6 +104,7 @@ export async function activate(context: vscode.ExtensionContext) {
                     try {
                         // Call the sync API
                         await haystackProvider?.syncWorkspace();
+                        await searchViewProvider?.updateStatusbar();
 
                         progress.report({ increment: 100 });
                         vscode.window.showInformationMessage('Haystack index refreshed successfully.');
