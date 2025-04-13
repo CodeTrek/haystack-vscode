@@ -40,6 +40,7 @@
     "build:dev": "npm run clean && cross-env NODE_ENV=development webpack --mode development",
     "test": "node ./dist/test/runTest.js",
     "build": "npm run build:prod && vsce package",
+    "publish": "npm run build && vsce publish",
     "clean": "rimraf dist",
     "analyze": "cross-env NODE_ENV=production webpack --analyze",
     "lint": "eslint src --ext ts",
