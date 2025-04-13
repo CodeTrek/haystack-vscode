@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 
 export function getSearchTemplate(webview: any, extensionUri: vscode.Uri, isHaystackSupported: boolean) {
   // Get paths to resource files
-  const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'search.js'));
-  const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'search.css'));
+  const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'search.js'));
+  const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'search.css'));
 
   // Set CSP (Content Security Policy)
   const csp = `

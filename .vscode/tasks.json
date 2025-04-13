@@ -5,7 +5,7 @@
             "label": "VS Code Extension Build",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/vscode"
+                "cwd": "${workspaceFolder}"
             },
             "command": "npm",
             "args": [
@@ -21,7 +21,7 @@
             "label": "VS Code Extension Watch",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/vscode"
+                "cwd": "${workspaceFolder}"
             },
             "command": "npm",
             "args": [
@@ -56,7 +56,7 @@
             "label": "VS Code Extension Test",
             "type": "shell",
             "options": {
-                "cwd": "${workspaceFolder}/vscode"
+                "cwd": "${workspaceFolder}"
             },
             "command": "npm",
             "args": [

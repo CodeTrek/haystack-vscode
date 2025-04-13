@@ -44,7 +44,7 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [
         vscode.Uri.joinPath(this._extensionUri, 'resources'),
         vscode.Uri.joinPath(this._extensionUri, 'dist'),
-        vscode.Uri.joinPath(this._extensionUri, 'dist', 'resources')
+        vscode.Uri.joinPath(this._extensionUri, 'dist', 'webview')
       ]
     };
 

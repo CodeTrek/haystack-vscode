@@ -59,6 +59,18 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(isProd ? 'production' : 'development'),
       'process.env.IS_PROD': JSON.stringify(isProd)
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/webview/*.js',
+          to: 'webview/[name][ext]'
+        },
+        {
+          from: 'src/webview/*.css',
+          to: 'webview/[name][ext]'
+        }
+      ]
+    }),
     ...(isAnalyze ? [new BundleAnalyzerPlugin()] : [])
   ],
   optimization: {

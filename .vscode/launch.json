@@ -8,19 +8,19 @@
       "type": "extensionHost",
       "request": "launch",
       "name": "VS Code Extension",
-      "cwd": "${workspaceFolder}/vscode",
+      "cwd": "${workspaceFolder}",
       "runtimeExecutable": "${execPath}",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode",
+        "--extensionDevelopmentPath=${workspaceFolder}",
         "--disable-extensions",
         "--disable-workspace-trust"
       ],
       "outFiles": [
-        "${workspaceFolder}/vscode/dist/**/*.js"
+        "${workspaceFolder}/dist/**/*.js"
       ],
       "env": {
         "IS_DEV": "true",
-        "DEV_WORKSPACE_FOLDER": "${workspaceFolder}/vscode"
+        "DEV_WORKSPACE_FOLDER": "${workspaceFolder}"
       }
     }
   ]
