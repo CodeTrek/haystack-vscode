@@ -46,8 +46,6 @@ body {
     transform: translateY(-50%);
     cursor: pointer;
     color: var(--vscode-descriptionForeground);
-    background: none;
-    border: none;
     width: 20px;
     height: 18px;
     display: flex;
@@ -58,19 +56,20 @@ body {
     border-radius: 3px;
 }
 
-.search-option-button:hover {
-    background: var(--vscode-button-hoverBackground);
+.input-option-button {
+    background: none;
+    border: none;
+}
+
+.input-option-button:hover {
+    background: var(--vscode-inputOption-hoverBackground);
     opacity: 0.8;
 }
 
-.search-option-button.active {
-    background: var(--vscode-button-background);
-    color: var(--vscode-button-foreground);
-}
-
-.search-option-button.active:hover {
-    background: var(--vscode-button-background);
-    opacity: 0.9;
+.input-option-button.active {
+    background-color: var(--vscode-inputOption-activeBackground);
+    color: var(--vscode-inputOption-activeForeground);
+    outline: 1px solid var(--vscode-inputOption-activeBorder)
 }
 
 /* Clear button styles */
@@ -104,18 +103,14 @@ body {
 }
 
 .search-options-toggle:hover {
-    background: var(--vscode-button-hoverBackground);
+    background: var(--vscode-inputOption-hoverBackground);
     opacity: 0.8;
 }
 
 .search-options-toggle.active {
-    background: var(--vscode-button-background);
-    color: var(--vscode-button-foreground);
-}
-
-.search-options-toggle.active:hover {
-    background: var(--vscode-button-background);
-    opacity: 0.9;
+    background-color: var(--vscode-inputOption-activeBackground);
+    color: var(--vscode-inputOption-activeForeground);
+    outline: 1px solid var(--vscode-inputOption-activeBorder)
 }
 
 .search-options {

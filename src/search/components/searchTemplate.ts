@@ -33,8 +33,8 @@ export function getSearchTemplate(webview: any, extensionUri: vscode.Uri, isHays
         ${platformWarning}
         <div class="search-input-container">
           <input type="text" class="search-input" placeholder="Search in files..." id="searchInput" autofocus>
-          <button class="search-option-button clear-button" id="clearTextBtn" title="Clear search text" style="display: none;">✕</button>
-          <button class="search-option-button" id="caseSensitiveBtn" title="Case sensitive">Aa</button>
+          <button class="search-option-button input-option-button clear-button" id="clearTextBtn" title="Clear search text" style="display: none;">✕</button>
+          <button class="search-option-button input-option-button" id="caseSensitiveBtn" title="Case sensitive">Aa</button>
           <button class="search-options-toggle" id="optionsToggle">⋮</button>
         </div>
         <div class="search-options" id="searchOptions">
