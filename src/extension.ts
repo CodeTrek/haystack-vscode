@@ -47,9 +47,14 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('haystack.searchSelectedText', async () => {
             const editor = vscode.window.activeTextEditor;
 
+            // focus the view first
+            // This is a workaround to ensure the view is created before we try to focus it
+            // This is necessary because the view may not be created yet
+            // when the command is executed
+            await vscode.commands.executeCommand('haystackSearch.focus');
+
+            // No active editor
             if (!editor) {
-                // No active editor, just focus the view
-                await vscode.commands.executeCommand('haystackSearch.focus');
                 return;
             }
 

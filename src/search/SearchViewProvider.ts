@@ -82,7 +82,6 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
       this._searchHandlers.handleVisibilityChange(webviewView.webview, webviewView.visible);
     });
 
-    // Process any pending search after the view is created
     if (this._pendingSearchText) {
       const pendingText = this._pendingSearchText;
       this._pendingSearchText = undefined;
@@ -122,9 +121,7 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
     };
 
     // Use the search handlers to perform the search immediately
-    if (this._view.visible) {
-      this._searchHandlers.handleSearch(this._view.webview, text, defaultOptions);
-    }
+    this._searchHandlers.handleSearch(this._view.webview, text, defaultOptions);
   }
 
   /**
