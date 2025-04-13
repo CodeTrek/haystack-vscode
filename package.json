@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "publisher": "codetrek",
   "haystackVersion": "1.1.0",
-  "repository": "https://github.com/CodeTrek/haystack",
+  "repository": "https://github.com/CodeTrek/haystack-vscode",
   "license": "MIT",
   "icon": "resources/icon.png",
   "author": {
