@@ -65,6 +65,25 @@
         }
       ]
     },
+    "configuration": {
+      "title": "Haystack Search",
+      "properties": {
+        "haystack.search.maxResults": {
+          "type": "number",
+          "default": 200,
+          "minimum": 10,
+          "maximum": 1000,
+          "description": "Maximum number of search results to return"
+        },
+        "haystack.search.maxResultsPerFile": {
+          "type": "number",
+          "default": 50,
+          "minimum": 5,
+          "maximum": 500,
+          "description": "Maximum number of search results to return per file"
+        }
+      }
+    },
     "commands": [
       {
         "command": "haystack.searchSelectedText",
@@ -74,6 +93,11 @@
         "command": "haystack.syncWorkspace",
         "title": "Refresh Haystack Index",
         "icon": "$(sync)"
+      },
+      {
+        "command": "haystack.openSettings",
+        "title": "Haystack Settings",
+        "icon": "$(gear)"
       }
     ],
     "keybindings": [
@@ -88,7 +112,12 @@
         {
           "command": "haystack.syncWorkspace",
           "when": "view == haystackSearch",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "haystack.openSettings",
+          "when": "view == haystackSearch",
+          "group": "navigation@2"
         }
       ]
     }

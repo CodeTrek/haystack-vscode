@@ -13,12 +13,17 @@ export class SearchHandlers {
     maxResultsPerFile?: number;
   }) {
     try {
+      // Get configuration values
+      const config = vscode.workspace.getConfiguration('haystack.search');
+      const maxResults = options.maxResults || config.get<number>('maxResults', 200);
+      const maxResultsPerFile = options.maxResultsPerFile || config.get<number>('maxResultsPerFile', 50);
+
       const searchResult = await this.haystackProvider.search(query, {
         caseSensitive: options.caseSensitive,
         include: options.include,
         exclude: options.exclude,
-        maxResults: options.maxResults || 200,
-        maxResultsPerFile: options.maxResultsPerFile || 50
+        maxResults: maxResults,
+        maxResultsPerFile: maxResultsPerFile
       });
 
       webview.postMessage({

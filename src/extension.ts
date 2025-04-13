@@ -112,6 +112,13 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // Register command to open settings
+    context.subscriptions.push(
+        vscode.commands.registerCommand('haystack.openSettings', () => {
+            vscode.commands.executeCommand('workbench.action.openSettings', 'haystack.search');
+        })
+    );
+
     // Delay workspace creation
     setTimeout(async () => {
         try {
