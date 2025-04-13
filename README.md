@@ -1,47 +1,37 @@
-# Extensions Directory
+# vscode-haystack-search
 
-This directory contains extensions and plugins that enhance the functionality of the Local Code Search Indexer. These extensions provide additional features and integrations with various tools and platforms.
+## Overview
+vscode-haystack-search is a Visual Studio Code extension that leverages Haystack to provide advanced file search capabilities. This extension allows users to perform efficient text searches across their project files, enhancing productivity and code navigation.
 
-## Purpose
+## Features
+- Integrates Haystack for powerful search functionality.
+- Provides a user-friendly interface for searching text within files.
+- Displays search results with relevant file paths and line contents.
 
-Extensions are designed to:
-- Add support for additional file types and programming languages
-- Integrate with external tools and services
-- Provide custom indexing strategies
-- Add specialized search capabilities
+## Installation
+1. Clone the repository:
+   ```
+   git clone https://github.com/CodeTrek/haystack.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd haystack/extensions/vscode
+   ```
+3. Install the dependencies:
+   ```
+   npm install
+   ```
 
-## Directory Structure
+## Usage
+- After installing the extension, you can initiate a search by using the command palette (Ctrl+Shift+P) and selecting "Haystack Search".
+- Enter your search query and view the results displayed in the search panel.
 
-- **filetypes/**: Extensions for specific file types and languages
-- **integrations/**: Integrations with external tools and services
-- **custom/**: Custom indexing and search strategies
-- **plugins/**: Additional plugins for extended functionality
+## Contribution
+Contributions are welcome! Please follow these steps to contribute:
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your branch and create a pull request.
 
-## Development Guidelines
-
-1. **Creating New Extensions**
-   - Follow the extension interface defined in the core
-   - Include proper documentation
-   - Provide test cases
-   - Maintain backward compatibility
-
-2. **Extension Types**
-   - **File Type Extensions**: Add support for new file formats
-   - **Integration Extensions**: Connect with external services
-   - **Custom Indexers**: Implement specialized indexing strategies
-   - **Search Plugins**: Add custom search capabilities
-
-3. **Best Practices**
-   - Keep extensions modular and focused
-   - Document all public APIs
-   - Include example configurations
-   - Follow the project's coding standards
-
-## Adding New Extensions
-
-To add a new extension:
-1. Create a new directory under the appropriate category
-2. Implement the required interfaces
-3. Add documentation
-4. Include tests
-5. Update the main documentation with extension details
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
