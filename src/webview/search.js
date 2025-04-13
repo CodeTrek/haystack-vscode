@@ -83,11 +83,29 @@
 
             const fileHeader = document.createElement('div');
             fileHeader.className = 'file-header';
-            fileHeader.innerHTML = `
-                <span class="file-path">${escapeHTML(result.file)}${result.truncate ? ' (truncated)' : ''}</span>
-                <span class="match-count">${result.lines?.length || 0}</span>
-            `;
+
+            // Add collapse/expand toggle icon as the leftmost element
+            const toggleIcon = document.createElement('span');
+            toggleIcon.className = 'toggle-icon codicon codicon-chevron-down';
+
+            // Create the file path element
+            const filePathElement = document.createElement('span');
+            filePathElement.className = 'file-path';
+            filePathElement.textContent = `${result.file}${result.truncate ? ' (truncated)' : ''}`;
+
+            const matchCount = document.createElement('span');
+            matchCount.className = 'match-count';
+            matchCount.textContent = result.lines?.length || 0;
+
+            // Add elements in left-to-right order: toggle icon, file path, match count
+            fileHeader.appendChild(toggleIcon);
+            fileHeader.appendChild(filePathElement);
+            fileHeader.appendChild(matchCount);
             fileGroup.appendChild(fileHeader);
+
+            // Create a container for the results to allow for collapsing
+            const fileResults = document.createElement('div');
+            fileResults.className = 'file-results';
 
             if (result.lines) {
                 result.lines.forEach(match => {
@@ -145,9 +163,21 @@
                             end: matchDiv.dataset.end ? parseInt(matchDiv.dataset.end) : undefined
                         });
                     });
-                    fileGroup.appendChild(matchDiv);
+                    fileResults.appendChild(matchDiv);
                 });
             }
+
+            fileGroup.appendChild(fileResults);
+
+            // Add click handler for collapsing/expanding
+            fileHeader.addEventListener('click', (e) => {
+                // Prevent click from reaching the child elements
+                e.stopPropagation();
+
+                // Toggle collapsed state
+                fileHeader.classList.toggle('collapsed');
+                fileResults.classList.toggle('collapsed');
+            });
 
             container.appendChild(fileGroup);
         });

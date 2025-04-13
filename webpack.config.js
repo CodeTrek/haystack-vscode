@@ -68,6 +68,14 @@ module.exports = {
         {
           from: 'src/webview/*.css',
           to: 'webview/[name][ext]'
+        },
+        {
+          from: 'node_modules/@vscode/codicons/dist/codicon.css',
+          to: 'webview/codicon.css'
+        },
+        {
+          from: 'node_modules/@vscode/codicons/dist/codicon.ttf',
+          to: 'webview/codicon.ttf'
         }
       ]
     }),
@@ -101,7 +109,7 @@ module.exports = {
         extractComments: false
       })
     ],
-    splitChunks: isProd ? {
+    splitChunks:  {
       chunks: 'all',
       minSize: 20000,
       maxSize: 250000,
@@ -124,7 +132,7 @@ module.exports = {
           reuseExistingChunk: true
         }
       }
-    } : false,
+    },
     usedExports: true,
     moduleIds: 'deterministic',
     chunkIds: 'deterministic'

@@ -165,10 +165,26 @@ body {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    user-select: none;
 }
 
 .file-header:hover {
     background: var(--vscode-list-activeSelectionBackground);
+}
+
+.file-header .toggle-icon {
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    color: var(--vscode-foreground);
+    font-size: 16px;
+}
+
+.file-header.collapsed .toggle-icon {
+    transform: rotate(-90deg);
 }
 
 .file-path {
@@ -181,6 +197,15 @@ body {
     text-align: left;
     flex: 1;
     margin-right: 8px;
+}
+
+.file-results {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.file-results.collapsed {
+    display: none;
 }
 
 .match-count {

@@ -4,6 +4,8 @@ export function getSearchTemplate(webview: any, extensionUri: vscode.Uri, isHays
   // Get paths to resource files
   const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'search.js'));
   const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'search.css'));
+  // Get codicons URI
+  const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview', 'codicon.css'));
 
   // Set CSP (Content Security Policy)
   const csp = `
@@ -26,6 +28,7 @@ export function getSearchTemplate(webview: any, extensionUri: vscode.Uri, isHays
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="Content-Security-Policy" content="${csp}">
       <title>Haystack Search</title>
+      <link href="${codiconsUri}" rel="stylesheet" type="text/css">
       <link href="${styleUri}" rel="stylesheet" type="text/css">
     </head>
     <body>
