@@ -23,6 +23,10 @@ const haystackConfig= (context: vscode.ExtensionContext) => `
 global:
   data_path: ${path.join(context.globalStorageUri.fsPath, 'data')}
   port: ${LOCAL_PORT}
+client:
+  default_limit:
+    max_results: 500
+    max_results_per_file: 50
 `
 
 const platform = () => {
