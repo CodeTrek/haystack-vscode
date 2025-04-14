@@ -176,7 +176,7 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
         this._statusBarItem.show();
       } else if (status.indexing) {
         this._statusBarItem.text = `$(sync~spin) Haystack (indexing)`;
-        this._statusBarItem.tooltip = `Indexing workspace:\n• Indexed: ${status.indexedFiles} files\n• Total: ${status.totalFiles} files\nYou can search now, but the results may not be accurate`;
+        this._statusBarItem.tooltip = `Indexing workspace:\n• Indexed: ${status.totalFiles} files\nYou can search now, but the results may not be accurate`;
         this._statusBarItem.show();
       } else {
         this._statusBarItem.text = `$(check) Haystack (Ready)`;
