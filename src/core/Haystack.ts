@@ -72,6 +72,7 @@ type Status =
 type InstallStatus =
   'initializing'|
   'downloading'|
+  'extracting'|
   'unsupported'|
   'error'|
   'installed'|
@@ -80,6 +81,7 @@ type InstallStatus =
 export type HaystackEvent =
   'status-change' |
   'install-status-change' |
+  'starting' |
   'download-progress' |
   'error';
 
@@ -158,6 +160,10 @@ export class Haystack extends EventEmitter {
 
   public getDownloadProgress(): DownloadProgress {
     return this._downloadProgress;
+  }
+
+  public getRetryCount(): number {
+    return this._startRetry;
   }
 
   // Sets the status and emits a status-change event
@@ -331,6 +337,21 @@ export class Haystack extends EventEmitter {
   }
 
   private async downloadFile(url: string, destination: string): Promise<void> {
+    for (let i = 0; i < 3; i++) {
+      try {
+        // Check if the file already exists
+        await this.downloadFileWithNoRetry(url, destination);
+        return;
+      } catch (error) {
+        // If the file doesn't exist or is too small, proceed with download
+        console.error(`Download failed: ${error}`);
+      }
+      // delay before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+
+  private async downloadFileWithNoRetry(url: string, destination: string): Promise<void> {
     const https = require('https');
     const http = require('http');
 
@@ -471,6 +492,7 @@ export class Haystack extends EventEmitter {
     const zip = new AdmZip(zipFilePath);
 
     console.log(`Extracting zip file: ${zipFilePath}`);
+    this.installStatus = 'extracting';
     return new Promise((resolve, reject) => {
       try {
         zip.extractAllTo(this.binDir, true);
@@ -562,15 +584,15 @@ export class Haystack extends EventEmitter {
       return;
     }
 
-    this._startRetry += 1;
     if (this._startRetry > 10) {
       this._startRetry = 0;
       console.error("Haystack server start failed.");
       this.status = 'error';
       return;
     }
+    this.emit('starting', this._startRetry);
+    this.startServer();
 
-    await this.startServer()
     await new Promise(resolve => setTimeout(resolve, 1000));
     if (await this.isRunning()) {
       this.status = 'running';
@@ -578,7 +600,10 @@ export class Haystack extends EventEmitter {
       return;
     }
 
-    setTimeout(()=>this.start(), 3000);
+    setTimeout(()=> {
+      this._startRetry += 1;
+      this.start()
+    }, 3000);
   }
 
   private async isRunning(): Promise<boolean> {
@@ -595,19 +620,19 @@ export class Haystack extends EventEmitter {
   }
 
  private async startServer(): Promise<boolean> {
-    // run this.coreFilePath server start to start the server
-    try {
-      console.log("Starting Haystack server...");
-      const command = `${this.coreFilePath} server start`;
-      const result = exec(command);
-      console.log("Haystack start success: ", result.stdout?.toString() ?? "", result.stderr?.toString() ?? "");
-      return true
-    } catch (error) {
-      console.error(`Failed to start Haystack: ${error}`);
-    }
-
-    return false;
+  // run this.coreFilePath server start to start the server
+  try {
+    const command = `"${this.coreFilePath}" server start`;
+    console.log(`Try starting Haystack server '${command}' (retry: ${this._startRetry})...`);
+    exec(command);
+    console.log("Haystack start command executed successfully");
+    return true;
+  } catch (error) {
+    console.error(`Failed to start Haystack: ${error}`);
   }
+
+  return false;
+}
 
   private isVersionCompatible(version: string): boolean {
     // Remove 'v' prefix if exists

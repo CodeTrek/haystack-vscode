@@ -161,6 +161,7 @@ body {
 .file-header {
     padding: 6px 8px;
     background: var(--vscode-list-activeSelectionBackground);
+    color: var(--vscode-list-activeSelectionForeground);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -179,7 +180,6 @@ body {
     justify-content: center;
     transition: transform 0.2s;
     flex-shrink: 0;
-    color: var(--vscode-foreground);
     font-size: 16px;
 }
 
@@ -189,7 +189,6 @@ body {
 
 .file-path {
     font-size: 12px;
-    color: var(--vscode-foreground);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -210,10 +209,10 @@ body {
 
 .match-count {
     font-size: 11px;
-    color: var(--vscode-descriptionForeground);
+    color: var(--vscode-profileBadge-foreground);
     padding: 2px 6px;
     border-radius: 10px;
-    background: var(--vscode-badge-background);
+    background: var(--vscode-profileBadge-background);
     flex-shrink: 0;
 }
 

@@ -42,6 +42,9 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
     this._haystackProvider.getHaystack()?.on('error', () => {
       this.updateStatusbar();
     });
+    this._haystackProvider.getHaystack()?.on('starting', () => {
+      this.updateStatusbar();
+    });
   }
 
   public resolveWebviewView(
@@ -167,14 +170,13 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
         if (this._haystackProvider.getHaystack().getInstallStatus() === 'downloading') {
           const progress = this._haystackProvider.getHaystack().getDownloadProgress();
           if (progress.totalSize > 0) {
-            this._statusBarItem.text += `$(sync~spin) Haystack: (Downloading) ${progress.percent}%`;
+            this._statusBarItem.text = `$(sync~spin) Haystack: (Downloading) ${progress.percent}%`;
             this._statusBarItem.tooltip =
               `Haystack is downloading:\n• total: ${Math.floor(progress.totalSize / 1024 / 1024 * 100) / 100.0} MB"+
                                       "\n• downloaded: ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
           } else {
             this._statusBarItem.text = `$(sync~spin) Haystack: (Downloading) ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
-            this._statusBarItem.tooltip =
-              `Haystack is downloading:\n• downloaded: ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
+            this._statusBarItem.tooltip =  `Haystack is downloading:\n• downloaded: ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
           }
         } else {
           this._statusBarItem.text = `$(sync~spin) Haystack: (Initializing)`;
@@ -183,7 +185,8 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
         this._statusBarItem.show();
         return;
       } else if (status === 'starting') {
-        this._statusBarItem.text = `$(sync~spin) Haystack: (Starting)`;
+        const retry = this._haystackProvider.getHaystack().getRetryCount() > 0 ? ` Retry: ${this._haystackProvider.getHaystack().getRetryCount()}` : '';
+        this._statusBarItem.text = `$(sync~spin) Haystack: (Starting${retry})`;
         this._statusBarItem.tooltip = `Haystack server is starting, `;
         this._statusBarItem.show();
         return;
