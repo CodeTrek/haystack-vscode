@@ -28,6 +28,20 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
     this._isHaystackSupported = isHaystackSupported;
     // Start status updates immediately when the provider is created
     this.startStatusUpdates();
+
+    // Listen for Haystack status changes
+    this._haystackProvider.getHaystack()?.on('status-change', () => {
+      this.updateStatusbar();
+    });
+    this._haystackProvider.getHaystack()?.on('install-status-change', () => {
+      this.updateStatusbar();
+    });
+    this._haystackProvider.getHaystack()?.on('download-progress', () => {
+      this.updateStatusbar();
+    });
+    this._haystackProvider.getHaystack()?.on('error', () => {
+      this.updateStatusbar();
+    });
   }
 
   public resolveWebviewView(
@@ -148,39 +162,62 @@ export class SearchViewProvider implements vscode.WebviewViewProvider {
         return;
       }
 
-      if (this._haystackProvider.getHaystack()?.getStatus() === 'unsupported') {
+      const status = this._haystackProvider.getHaystack()?.getStatus();
+      if (status === 'initializing') {
+        if (this._haystackProvider.getHaystack().getInstallStatus() === 'downloading') {
+          const progress = this._haystackProvider.getHaystack().getDownloadProgress();
+          if (progress.totalSize > 0) {
+            this._statusBarItem.text += `$(sync~spin) Haystack: (Downloading) ${progress.percent}%`;
+            this._statusBarItem.tooltip =
+              `Haystack is downloading:\n• total: ${Math.floor(progress.totalSize / 1024 / 1024 * 100) / 100.0} MB"+
+                                      "\n• downloaded: ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
+          } else {
+            this._statusBarItem.text = `$(sync~spin) Haystack: (Downloading) ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
+            this._statusBarItem.tooltip =
+              `Haystack is downloading:\n• downloaded: ${Math.floor(progress.downloadedSize / 1024 / 1024 * 100) / 100.0} MB`;
+          }
+        } else {
+          this._statusBarItem.text = `$(sync~spin) Haystack: (Initializing)`;
+          this._statusBarItem.tooltip = `Haystack is initializing, `;
+        }
+        this._statusBarItem.show();
+        return;
+      } else if (status === 'starting') {
+        this._statusBarItem.text = `$(sync~spin) Haystack: (Starting)`;
+        this._statusBarItem.tooltip = `Haystack server is starting, `;
+        this._statusBarItem.show();
+        return;
+      } else if (status === 'unsupported') {
         this._statusBarItem.text = `$(error) Haystack: (Unsupported)`;
         this._statusBarItem.tooltip = `Haystack is not supported on your platform`;
         this._statusBarItem.show();
         return;
-      }
-
-      if (this._haystackProvider.getHaystack()?.getStatus() === 'error') {
+      } else if (status === 'error') {
         this._statusBarItem.text = `$(error) Haystack: (Error)`;
-        this._statusBarItem.tooltip = `Error active haystack server`;
+        this._statusBarItem.tooltip = `Error active haystack server, install status: ${this._haystackProvider.getHaystack()?.getInstallStatus()}`;
         this._statusBarItem.show();
         return;
       }
 
-      if (this._haystackProvider.getHaystack()?.getStatus() === 'stopped') {
-        this._statusBarItem.text = `$(error) Haystack: (${this._haystackProvider.getHaystack()?.getInstallStatus()})`;
-        this._statusBarItem.tooltip = `Haystack server is stopped`;
+      if (!this._haystackProvider.getWorkspaceRoot()) {
+        this._statusBarItem.text = `$(check) Haystack: (No workspace)`;
+        this._statusBarItem.tooltip = `Please open a workspace to use Haystack`;
         this._statusBarItem.show();
         return;
       }
 
-      const status = await this._haystackProvider.getWorkspaceStatus();
-      if (status.error) {
+      const wsStatus = await this._haystackProvider.getWorkspaceStatus();
+      if (wsStatus.error) {
         this._statusBarItem.text = `$(error) Haystack: (Error)`;
-        this._statusBarItem.tooltip = `Error: ${status.error}`;
+        this._statusBarItem.tooltip = `Error: ${wsStatus.error}`;
         this._statusBarItem.show();
-      } else if (status.indexing) {
+      } else if (wsStatus.indexing) {
         this._statusBarItem.text = `$(sync~spin) Haystack (indexing)`;
-        this._statusBarItem.tooltip = `Indexing workspace:\n• Indexed: ${status.totalFiles} files\nYou can search now, but the results may not be accurate`;
+        this._statusBarItem.tooltip = `Indexing workspace:\n• Indexed: ${wsStatus.totalFiles} files\nYou can search now, but the results may not be accurate`;
         this._statusBarItem.show();
       } else {
         this._statusBarItem.text = `$(check) Haystack (Ready)`;
-        this._statusBarItem.tooltip = `Haystack search is ready\n• Total indexed files: ${status.totalFiles}\n• Status: Ready for search`;
+        this._statusBarItem.tooltip = `Haystack search is ready\n• Total indexed files: ${wsStatus.totalFiles}\n• Status: Ready for search`;
         this._statusBarItem.show();
       }
     } catch (error) {

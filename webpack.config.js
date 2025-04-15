@@ -91,7 +91,7 @@ module.exports = {
           compress: {
             drop_console: isProd,
             drop_debugger: true,
-            pure_funcs: isProd ? ['console.log', 'console.info'] : [],
+            pure_funcs:[],
             passes: 3,
             keep_infinity: true,
             unsafe: true,

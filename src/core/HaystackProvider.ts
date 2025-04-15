@@ -21,9 +21,9 @@ export class HaystackProvider {
   private updateTimeouts: Map<string, NodeJS.Timeout>;
   private periodicTaskInterval: NodeJS.Timeout | null;
   private statusUpdateInterval: NodeJS.Timeout | null;
-  private haystack: Haystack | null;
+  private haystack: Haystack;
 
-  constructor(haystack: Haystack | null) {
+  constructor(haystack: Haystack) {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     this.workspaceRoot = workspaceFolders ? workspaceFolders[0].uri.fsPath : '';
     this.updateTimeouts = new Map();
@@ -210,6 +210,10 @@ export class HaystackProvider {
     }
   }
 
+  public getWorkspaceRoot(): string {
+    return this.workspaceRoot;
+  }
+
   async getWorkspaceStatus(): Promise<{ indexing: boolean; totalFiles: number; indexedFiles: number; error?: string }> {
     if (!this.workspaceRoot) {
       return {
@@ -299,7 +303,8 @@ export class HaystackProvider {
 
   async syncWorkspace(): Promise<void> {
     if (!this.workspaceRoot) {
-      throw new Error('No workspace folder is opened');
+      // No workspace folder is opened
+      return
     }
 
     try {
