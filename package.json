@@ -82,6 +82,32 @@
           "minimum": 5,
           "maximum": 500,
           "description": "Maximum number of search results to return per file"
+        },
+        "haystack.search.useGlobalFilters": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use global filters for Haystack search"
+        },
+        "haystack.search.exclude.useGitIgnore": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use .gitignore to exclude files from Haystack search"
+        },
+        "haystack.search.exclude.custom": {
+          "type": "array",
+          "default": ["node_modules/", "dist/", "build/", "vendor/", "out/", "obj/", "log/", "logs/", ".*", "*.log", "*.log.*"],
+          "items": {
+            "type": "string"
+          },
+          "description": "Custom file patterns to exclude from Haystack search"
+        },
+        "haystack.search.include": {
+          "type": "array",
+          "default": ["**/*"],
+          "items": {
+            "type": "string"
+          },
+          "description": "File patterns to include in Haystack search"
         }
       }
     },
