@@ -4,7 +4,7 @@
   "description": "A VS Code extension that integrates Haystack for advanced file search capabilities.",
   "version": "1.0.5",
   "publisher": "codetrek",
-  "haystackVersion": "1.1.0",
+  "haystackVersion": "1.2.1",
   "repository": "https://github.com/CodeTrek/haystack-vscode",
   "license": "MIT",
   "icon": "resources/icon.png",

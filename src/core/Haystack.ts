@@ -528,7 +528,6 @@ export class Haystack extends EventEmitter {
       fs.promises.unlink(this.coreFilePath);
       this.installStatus = 'not-installed';
       console.log("The installed Haystack is not compatible.");
-      return
     } catch (error) {
     }
 
