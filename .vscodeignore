@@ -35,8 +35,6 @@ coverage/**
 
 # Development documentation
 docs/**
-CHANGELOG.md
-CONTRIBUTING.md
 .prettierrc
 .editorconfig
 ./convert-svg-to-png.js
