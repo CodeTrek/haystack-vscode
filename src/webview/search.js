@@ -128,8 +128,8 @@
                         const end = matchPositions[1];
 
                         const beforeMatch = content.substring(0, start);
-                        const truncatedBefore = beforeMatch.length > 24
-                            ? '...' + beforeMatch.substring(beforeMatch.length - 24)
+                        const truncatedBefore = beforeMatch.length > 12
+                            ? '...' + beforeMatch.substring(beforeMatch.length - 12)
                             : beforeMatch;
 
                         highlightedContent += escapeHTML(truncatedBefore);
