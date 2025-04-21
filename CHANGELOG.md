@@ -1,8 +1,10 @@
 # Changelog
 
-## [next]
-- Upgrade haystack core to v1.2.1
+## [1.1.0]
+- Upgrade haystack core to v1.2.2
 - Bugfix: Unable to upgrade haystack core while server is running
+- Add a button to start server if stopped.
+- Add more settings
 
 ## [1.0.5]
 - Bugfix: Low contrast resulting in unintelligible texts in the search result

@@ -3,13 +3,18 @@ import axios from 'axios';
 import {
   SearchContentRequest,
   SearchContentResponse,
-  SearchContentResult
+  SearchContentResult,
+  CreateWorkspaceRequest,
+  UpdateWorkspaceRequest,
+  Filters,
+  Exclude
 } from '../types/search';
 import { Haystack } from './Haystack';
 
 // Haystack API URLs
 const HAYSTACK_API_VERSION = `/api/v1`;
 const WORKSPACE_CREATE_URL = `${HAYSTACK_API_VERSION}/workspace/create`;
+const WORKSPACE_UPDATE_URL = `${HAYSTACK_API_VERSION}/workspace/update`;
 const WORKSPACE_GET_URL = `${HAYSTACK_API_VERSION}/workspace/get`;
 const WORKSPACE_SYNC_URL = `${HAYSTACK_API_VERSION}/workspace/sync`;
 const DOCUMENT_UPDATE_URL = `${HAYSTACK_API_VERSION}/document/update`;
@@ -123,9 +128,27 @@ export class HaystackProvider {
     }
 
     try {
-      const response = await this.post(WORKSPACE_CREATE_URL, {
-        workspace: this.workspaceRoot
-      });
+      // Get configuration values
+      const config = vscode.workspace.getConfiguration('haystack.search');
+      const useGlobalFilters = config.get<boolean>('useGlobalFilters', true);
+      const useGitIgnore = config.get<boolean>('exclude.useGitIgnore', false);
+      const customExclude = config.get<string[]>('exclude.custom', []);
+      const includePatterns = config.get<string[]>('include', ['**/*']);
+
+      // Build request payload with settings
+      const payload: CreateWorkspaceRequest = {
+        workspace: this.workspaceRoot,
+        use_global_filters: useGlobalFilters,
+        filters: {
+          exclude: {
+            use_git_ignore: useGitIgnore,
+            customized: customExclude
+          },
+          include: includePatterns
+        }
+      };
+
+      const response = await this.post(WORKSPACE_CREATE_URL, payload);
 
       if (response.data.code !== 0) {
         throw new Error(response.data.message || 'Failed to create workspace');
@@ -308,15 +331,59 @@ export class HaystackProvider {
     }
 
     try {
-      const response = await this.post(WORKSPACE_SYNC_URL, {
+      // Get configuration values
+      const config = vscode.workspace.getConfiguration('haystack.search');
+      const useGlobalFilters = config.get<boolean>('useGlobalFilters', true);
+      const useGitIgnore = config.get<boolean>('exclude.useGitIgnore', false);
+      const customExclude = config.get<string[]>('exclude.custom', []);
+      const includePatterns = config.get<string[]>('include', ['**/*']);
+
+      // Build request payload with settings for workspace update
+      const updatePayload: UpdateWorkspaceRequest = {
+        workspace: this.workspaceRoot,
+        use_global_filters: useGlobalFilters,
+        filters: {
+          exclude: {
+            use_git_ignore: useGitIgnore,
+            customized: customExclude
+          },
+          include: includePatterns
+        }
+      };
+
+      // First update the workspace with the configuration
+      const updateResponse = await this.post(WORKSPACE_UPDATE_URL, updatePayload);
+
+      if (updateResponse.data.code !== 0) {
+        throw new Error(updateResponse.data.message || 'Failed to update workspace');
+      }
+
+      // Then sync the workspace (only send workspace path)
+      const syncResponse = await this.post(WORKSPACE_SYNC_URL, {
         workspace: this.workspaceRoot
       });
 
-      if (response.data.code !== 0) {
-        throw new Error(response.data.message || 'Failed to sync workspace');
+      if (syncResponse.data.code !== 0) {
+        throw new Error(syncResponse.data.message || 'Failed to sync workspace');
       }
     } catch (error) {
       throw new Error(`Failed to sync workspace: ${error}`);
+    }
+  }
+
+  async startServer(): Promise<void> {
+    if (!this.haystack) {
+      throw new Error('Haystack instance is not available');
+    }
+
+    try {
+      // Start the Haystack server
+      await this.haystack.startServer();
+
+      // Create workspace after server starts
+      await this.createWorkspace();
+    } catch (error) {
+      throw new Error(`Failed to start Haystack server: ${error}`);
     }
   }
 
