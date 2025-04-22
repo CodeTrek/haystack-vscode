@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.1.1]
-- Upgrade haystack core to v1.2.3
+- Upgrade haystack core to v1.2.3, a critical bugfix: MCP connection will lost after a short while
 
 ## [1.1.0]
 - Upgrade haystack core to v1.2.2
