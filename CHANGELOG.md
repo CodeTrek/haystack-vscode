@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.1.1]
+- Upgrade haystack core to v1.2.3
+
 ## [1.1.0]
 - Upgrade haystack core to v1.2.2
 - Bugfix: Unable to upgrade haystack core while server is running
