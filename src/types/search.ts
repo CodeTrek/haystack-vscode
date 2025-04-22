@@ -79,3 +79,25 @@ export interface SearchMessage {
   end?: number;
   isVisible?: boolean;
 }
+
+export interface Exclude {
+  use_git_ignore?: boolean;
+  customized?: string[];
+}
+
+export interface Filters {
+  exclude?: Exclude;
+  include?: string[];
+}
+
+export interface CreateWorkspaceRequest {
+  workspace: string;
+  use_global_filters: boolean;
+  filters?: Filters;
+}
+
+export interface UpdateWorkspaceRequest {
+  workspace: string;
+  use_global_filters: boolean;
+  filters?: Filters;
+}

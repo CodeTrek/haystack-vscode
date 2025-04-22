@@ -2,9 +2,9 @@
   "name": "haystack-search",
   "displayName": "Haystack Search",
   "description": "A VS Code extension that integrates Haystack for advanced file search capabilities.",
-  "version": "1.0.6",
+  "version": "1.1.1",
   "publisher": "codetrek",
-  "haystackVersion": "1.2.1",
+  "haystackVersion": "1.2.3",
   "repository": "https://github.com/CodeTrek/haystack-vscode",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -82,6 +82,32 @@
           "minimum": 5,
           "maximum": 500,
           "description": "Maximum number of search results to return per file"
+        },
+        "haystack.search.useGlobalFilters": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use global filters for Haystack search"
+        },
+        "haystack.search.exclude.useGitIgnore": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use .gitignore to exclude files from Haystack search"
+        },
+        "haystack.search.exclude.custom": {
+          "type": "array",
+          "default": ["node_modules/", "dist/", "build/", "vendor/", "out/", "obj/", "log/", "logs/", ".*", "*.log", "*.log.*"],
+          "items": {
+            "type": "string"
+          },
+          "description": "Custom file patterns to exclude from Haystack search"
+        },
+        "haystack.search.include": {
+          "type": "array",
+          "default": ["**/*"],
+          "items": {
+            "type": "string"
+          },
+          "description": "File patterns to include in Haystack search, `**/*` for all files, `*.js` for JavaScript files, etc."
         }
       }
     },
@@ -99,6 +125,11 @@
         "command": "haystack.openSettings",
         "title": "Haystack Settings",
         "icon": "$(gear)"
+      },
+      {
+        "command": "haystack.startServer",
+        "title": "Start Haystack Server",
+        "icon": "$(debug-start)"
       }
     ],
     "keybindings": [
@@ -119,6 +150,12 @@
           "command": "haystack.openSettings",
           "when": "view == haystackSearch",
           "group": "navigation@2"
+        },
+        {
+          "command": "haystack.startServer",
+          "when": "view == haystackSearch && haystackInstalled && !haystackConnected",
+          "group": "navigation@0",
+          "icon": "$(debug-start)"
         }
       ]
     }

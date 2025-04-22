@@ -83,7 +83,8 @@ export type HaystackEvent =
   'install-status-change' |
   'starting' |
   'download-progress' |
-  'error';
+  'error' |
+  'connected';
 
 type DownloadProgress = {
   url: string;
@@ -104,6 +105,7 @@ export class Haystack extends EventEmitter {
   private HAYSTACK_ZIP_FILE_NAME: string;
   private _downloadProgress: DownloadProgress;
   private _startRetry: number;
+  private _connected: boolean;
 
   constructor(private context: vscode.ExtensionContext, localServer: boolean) {
     super();
@@ -118,6 +120,7 @@ export class Haystack extends EventEmitter {
     this.haystackVersion = "v" + context.extension.packageJSON.haystackVersion;
     this.HAYSTACK_ZIP_FILE_NAME = `haystack-${currentPlatform}-${this.haystackVersion}.zip`;
     this._startRetry = 0;
+    this._connected = false;
     this._downloadProgress = {
       url: '',
       totalSize: 0,
@@ -132,9 +135,32 @@ export class Haystack extends EventEmitter {
       throw new Error('Haystack is not running');
     }
 
-    const url = `${this.getUrl()}${uri}`;
-    const response = await axios.post(url, data);
-    return response;
+    try {
+      const url = `${this.getUrl()}${uri}`;
+      const response = await axios.post(url, data);
+      this.connected = true;
+      return response;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message || String(error);
+      if (errorMessage.includes('ECONNREFUSED') || errorMessage.includes('Failed to connect')) {
+        this.connected = false;
+      }
+
+      throw error
+    }
+  }
+
+  public set connected(newStatus: boolean) {
+    if (this._connected === newStatus) {
+      return;
+    }
+
+    this._connected = newStatus;
+    this.emit('connected', newStatus);
+  }
+
+  public get connected(): boolean {
+    return this._connected;
   }
 
   public isRunningLocally() {
@@ -618,7 +644,7 @@ export class Haystack extends EventEmitter {
       return false;
   }
 
- private async startServer(): Promise<boolean> {
+ public async startServer(): Promise<boolean> {
   // run this.coreFilePath server start to start the server
   try {
     const command = `"${this.coreFilePath}" server start`;

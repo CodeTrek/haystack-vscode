@@ -118,12 +118,71 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // Register command to start Haystack server
+    context.subscriptions.push(
+        vscode.commands.registerCommand('haystack.startServer', async () => {
+            try {
+                vscode.window.withProgress({
+                    location: vscode.ProgressLocation.Notification,
+                    title: "Starting Haystack server...",
+                    cancellable: false
+                }, async (progress) => {
+                    progress.report({ increment: 0 });
+
+                    try {
+                        // Start the server
+                        await haystackProvider?.getHaystack().startServer();
+                        await searchViewProvider?.updateStatusbar();
+
+                        progress.report({ increment: 100 });
+                        vscode.window.showInformationMessage('Haystack server started successfully.');
+                    } catch (error) {
+                        vscode.window.showErrorMessage(`Failed to start Haystack server: ${error}`);
+                    }
+                });
+            } catch (error) {
+                vscode.window.showErrorMessage(`Error starting Haystack server: ${error}`);
+            }
+        })
+    );
+
     // Register command to open settings
     context.subscriptions.push(
         vscode.commands.registerCommand('haystack.openSettings', () => {
             vscode.commands.executeCommand('workbench.action.openSettings', 'haystack.search');
         })
     );
+
+    // Function to update server running status in VS Code context
+    async function updateServerConnectedContext() {
+        if (!haystack) {
+            return;
+        }
+
+        console.log(`Haystack connected: ${haystack.connected}`);
+
+        await vscode.commands.executeCommand('setContext', 'haystackConnected', haystack.connected);
+    }
+
+    async function updateServerInstallContext() {
+        if (!haystack) {
+            return;
+        }
+
+        const installed = haystack.getInstallStatus() === 'installed';
+        await vscode.commands.executeCommand('setContext', 'haystackInstalled', installed);
+    }
+
+    // Update server running status initially
+    updateServerConnectedContext();
+
+    haystack.on('install-status-change', async (event) => {
+        await updateServerInstallContext();
+    });
+
+    haystack.on('connected', async (event) => {
+        await updateServerConnectedContext();
+    });
 
     // Delay workspace creation
     setTimeout(async () => {
