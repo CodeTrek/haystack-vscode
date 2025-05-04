@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.1.2]
+- Remove default keybind CTRL+SHIFT+F, as it's the VSCode's top popular keyboard shortcut.
+
 ## [1.1.1]
 - Upgrade haystack core to v1.2.3, a critical bugfix: MCP connection will lost after a short while
 
